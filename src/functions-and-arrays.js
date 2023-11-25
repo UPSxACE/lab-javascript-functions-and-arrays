@@ -45,7 +45,29 @@ function sumNumbers(arrNumbers) {
 }
 
 // Iteration #3.1 Bonus:
-function sum() {}
+function sum(arrOfThings) {
+  let incrementedValue = 0;
+
+  arrOfThings.forEach((thing) => {
+    switch (typeof thing) {
+      case "string":
+        incrementedValue += thing.length;
+        break;
+      case "number":
+        incrementedValue += thing;
+        break;
+      case "boolean":
+        incrementedValue += Number(thing);
+        break;
+      default:
+        throw new Error(
+          "functions-and-arrays.sum(): invalid element inside array"
+        );
+    }
+  });
+
+  return incrementedValue;
+}
 
 // Iteration #4: Calculate the average
 // Level 1: Array of numbers
@@ -94,7 +116,37 @@ function averageWordLength(arrStrings) {
 }
 
 // Bonus - Iteration #4.1
-function avg() {}
+function avg(arrOfThings) {
+  if (arrOfThings.length === 0) {
+    return null;
+  }
+
+  let values = [];
+  let incrementedValue = 0;
+
+  arrOfThings.forEach((thing) => {
+    switch (typeof thing) {
+      case "string":
+        values.push(thing.length);
+        incrementedValue += thing.length;
+        break;
+      case "number":
+        values.push(thing);
+        incrementedValue += thing;
+        break;
+      case "boolean":
+        values.push(Number(thing));
+        incrementedValue += Number(thing);
+        break;
+      default:
+        throw new Error(
+          "functions-and-arrays.avg(): invalid element inside array"
+        );
+    }
+  });
+
+  return incrementedValue / values.length;
+}
 
 // Iteration #5: Unique arrays
 const wordsUnique = [
