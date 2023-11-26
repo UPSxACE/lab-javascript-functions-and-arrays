@@ -305,13 +305,13 @@ function greatestProduct(mtrx) {
   // Y axis = columns / horizontal indexes
   // ej: matrix[x][y]
 
+  // start timer
+  console.time("testMatrixIterationSpeed");
+
   let biggestAdjecentProduct = 0;
 
   const verticalSpaces = mtrx.length;
   const horizontalSpaces = mtrx[0].length;
-
-  //FIXME
-  let count = 0;
 
   // Will do diagonals first
   if (horizontalSpaces >= 4 && verticalSpaces >= 4) {
@@ -321,15 +321,13 @@ function greatestProduct(mtrx) {
     // normal diagonals
     const lastRow = mtrx.length - 1;
     const lastColumn = mtrx[0].length - 1;
+
+    // normal horizontal diagonals
     for (let i = 0; i < horizontalDiagonals; i++) {
       // initial values
-      let diagonalLowerCoords = [lastRow, 3];
-      let diagonalHigherCoords = [lastRow - 3, 0];
-      //FIXME
-      // if (i == 0) {
-      //   console.log("init init");
-      //   console.log(diagonalHigherCoords, diagonalLowerCoords);
-      // }
+      const diagonalLowerCoords = [lastRow, 3];
+      const diagonalHigherCoords = [lastRow - 3, 0];
+
       // increment the initial values in y axis according to i
       diagonalHigherCoords[1] += i;
       diagonalLowerCoords[1] += i;
@@ -354,16 +352,10 @@ function greatestProduct(mtrx) {
         const val2 = mtrx[startx - 1][starty - 1];
         const val3 = mtrx[startx - 2][starty - 2];
         const val4 = mtrx[startx - 3][starty - 3];
-        const sum = val1 + val2 + val3 + val4;
-        if (sum > biggestAdjecentProduct) {
-          biggestAdjecentProduct = sum;
+        const product = val1 * val2 * val3 * val4;
+        if (product > biggestAdjecentProduct) {
+          biggestAdjecentProduct = product;
         }
-        //FIXME
-        // console.log("starts:", startx, starty);
-        // console.log("Itr:", count);
-        // console.log("Coords:", val1, val2, val3, val4);
-        console.log("biggest:", biggestAdjecentProduct);
-        count++;
 
         // move up in the diagonal higher and lower coords
         diagonalHigherCoords[0] -= 1;
@@ -373,11 +365,57 @@ function greatestProduct(mtrx) {
       }
     }
 
-    console.log("end");
+    // normal vertical diagonals
+    for (let i = 0; i < verticalDiagonals; i++) {
+      // initial values
+      const diagonalLowerCoords = [lastRow, lastColumn];
+      const diagonalHigherCoords = [lastRow - 3, lastColumn - 3];
+
+      // increment the initial values in x axis according to i
+      diagonalHigherCoords[0] -= i + 1;
+      diagonalLowerCoords[0] -= i + 1;
+
+      const validCoords = () => {
+        // check if coords are still valid (they will be moving up)
+        if (
+          diagonalHigherCoords[0] < 0 ||
+          diagonalHigherCoords[1] < 0 ||
+          diagonalLowerCoords[0] < 0 ||
+          diagonalLowerCoords[1] < 0
+        ) {
+          return false;
+        }
+        return true;
+      };
+
+      while (validCoords()) {
+        const startx = diagonalLowerCoords[0];
+        const starty = diagonalLowerCoords[1];
+
+        const val1 = mtrx[startx][starty];
+        const val2 = mtrx[startx - 1][starty - 1];
+        const val3 = mtrx[startx - 2][starty - 2];
+        const val4 = mtrx[startx - 3][starty - 3];
+        const product = val1 * val2 * val3 * val4;
+
+        if (product > biggestAdjecentProduct) {
+          biggestAdjecentProduct = product;
+        }
+
+        // move up in the diagonal higher and lower coords
+        diagonalHigherCoords[0] -= 1;
+        diagonalHigherCoords[1] -= 1;
+        diagonalLowerCoords[0] -= 1;
+        diagonalLowerCoords[1] -= 1;
+      }
+    }
 
     // reverse diagonals
   }
-
+  // FIXME
+  console.log("end", biggestAdjecentProduct);
+  // end timer
+  console.timeEnd("testMatrixIterationSpeed");
   return biggestAdjecentProduct;
 }
 
