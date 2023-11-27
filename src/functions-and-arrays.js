@@ -303,20 +303,20 @@ function greatestProduct(mtrx) {
   // Note:
   // X axis = rows / vertical indexes
   // Y axis = columns / horizontal indexes
-  // ej: matrix[x][y]
+  // ej: mtrx[x][y]
 
   let biggestAdjecentProduct = 0;
 
   const verticalSpaces = mtrx.length;
   const horizontalSpaces = mtrx[0].length;
 
+  const lastRow = mtrx.length - 1;
+  const lastColumn = mtrx[0].length - 1;
+
   // Will do diagonals first
   if (horizontalSpaces >= 4 && verticalSpaces >= 4) {
     const horizontalDiagonals = horizontalSpaces - 3;
     const verticalDiagonals = verticalSpaces - 4; // the one in the edge is shared, so it's considered horizontalDiagonal
-
-    const lastRow = mtrx.length - 1;
-    const lastColumn = mtrx[0].length - 1;
 
     // normal diagonals
 
@@ -498,7 +498,55 @@ function greatestProduct(mtrx) {
       }
     }
   }
- 
+
+  // Now that the diagonals are done, do the verticals and horizontals
+
+  // do verticals
+  if (mtrx.length > 4) {
+    // iterate through every column
+    for (let i = 0; i < mtrx[0].length; i++) {
+      // initial values
+      const lowerCoords = [lastRow, 0];
+
+      for (let j = 0; j < mtrx.length - 3; j++) {
+        const startx = lowerCoords[0] - j;
+        const starty = lowerCoords[1] + i;
+        const val1 = mtrx[startx][starty];
+        const val2 = mtrx[startx - 1][starty];
+        const val3 = mtrx[startx - 2][starty];
+        const val4 = mtrx[startx - 3][starty];
+        const product = val1 * val2 * val3 * val4;
+
+        if (product > biggestAdjecentProduct) {
+          biggestAdjecentProduct = product;
+        }
+      }
+    }
+  }
+
+  // do horizontals
+  if (mtrx[0].length > 4) {
+    // iterate through every row
+    for (let i = 0; i < mtrx.length; i++) {
+      // initial values
+      const lowerCoords = [0, 0];
+
+      for (let j = 0; j < mtrx[0].length - 3; j++) {
+        const startx = lowerCoords[0] + i;
+        const starty = lowerCoords[1] + j;
+        const val1 = mtrx[startx][starty];
+        const val2 = mtrx[startx][starty + 1];
+        const val3 = mtrx[startx][starty + 1];
+        const val4 = mtrx[startx][starty + 1];
+        const product = val1 * val2 * val3 * val4;
+
+        if (product > biggestAdjecentProduct) {
+          biggestAdjecentProduct = product;
+        }
+      }
+    }
+  }
+
   return biggestAdjecentProduct;
 }
 
